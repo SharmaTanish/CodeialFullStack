@@ -8,12 +8,14 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codeial.codeial.entity.PostEntity;
 
 import com.codeial.codeial.service.PostService;
+import com.codeial.codeial.utilities.SavePostResponse;
 
 @RestController
 public class PostController {
@@ -25,10 +27,12 @@ public class PostController {
 		List<PostEntity> posts = postService.getAllPosts();
 		return new ResponseEntity<>(posts, HttpStatus.OK);
 	}
-	
+	/*
 	@PostMapping("/posts")
-	public ResponseEntity<String> savePosts(@RequestParam String content){
-		HttpStatus status = postService.savePost(content);
-		return new ResponseEntity<>(status==HttpStatus.OK ? "Post saved!" : "Some error occured!", status);
+	public ResponseEntity<SavePostResponse> savePosts(@RequestParam String token, @RequestBody String content){
+		PostEntity post = postService.savePost(token, content);
+		if(post!=null) return new ResponseEntity<>(new SavePostResponse("Post added successfully", true, post), HttpStatus.OK);
+		return new ResponseEntity<>(new SavePostResponse("Some error occured", false, null), HttpStatus.BAD_REQUEST);
 	}
+	*/
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.codeial.codeial.entity.PostEntity;
+import com.codeial.codeial.entity.UserEntity;
 import com.codeial.codeial.repositories.PostRepository;
 import com.codeial.codeial.service.PostService;
 
@@ -22,15 +23,18 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
-	public HttpStatus savePost(String content) {
-		PostEntity post = new PostEntity();// this new will auto-generate next Id
-		post.setContent(content);
+	public PostEntity savePost(String token, String content) {
+		//get user from token---------------------------------------
+		UserEntity user = null;
+		
+		PostEntity post = new PostEntity(user, content);// this new will auto-generate next Id
+		// post.setContent(content);
 		try {
 			postRepository.saveAndFlush(post); //must put this in try/catch
-			return HttpStatus.OK;
+			return post;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return HttpStatus.BAD_REQUEST;
+			return null;
 		}
 		
 	}

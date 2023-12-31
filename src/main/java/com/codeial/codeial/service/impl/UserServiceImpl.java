@@ -32,5 +32,16 @@ public class UserServiceImpl implements UserService{
 		}
 		return HttpStatus.OK;
 	}
+
+	@Override
+	public UserEntity loadUserByUsername(String username) {
+		List<UserEntity> users = userRepository.findAll();
+		for(UserEntity user : users) {
+			if(user.getUsername().equals(username)) {
+				return user;
+			}
+		}
+		return null;
+	}
 	
 }

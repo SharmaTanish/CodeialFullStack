@@ -11,12 +11,13 @@ import lombok.Setter;
 // @Getter
 // @Setter
 public class PostEntity {
+
 	public long getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(long id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public String getContent() {
@@ -29,8 +30,16 @@ public class PostEntity {
 
 	@jakarta.persistence.Id // to make primary key
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // to auto-generate ID
-	private long Id;
+	private long id;
 	
 	@Column(name="post_content", unique = true)
 	private String content;
+	
+	private UserEntity user;
+
+	public PostEntity(UserEntity user, String content) {
+		super();
+		this.content = content;
+		this.user = user;
+	}
 }

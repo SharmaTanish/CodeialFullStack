@@ -13,4 +13,7 @@ public interface UserService {
 	public List<UserEntity> getAllUsers();
 	
 	public HttpStatus addUser(UserEntity user);
+	
+	public UserEntity loadUserByUsername(String username);
+	//write methods...
 }

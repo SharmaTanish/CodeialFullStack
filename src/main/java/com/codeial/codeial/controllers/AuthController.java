@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codeial.codeial.entity.UserEntity;
 import com.codeial.codeial.service.UserService;
+import com.codeial.codeial.utilities.AuthResponse;
 
 @RestController
 public class AuthController {
@@ -20,23 +21,29 @@ public class AuthController {
 	private UserService userService;
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody UserEntity userCredentails){
+	public ResponseEntity<AuthResponse> login(@RequestBody UserEntity userCredentails){
 		List<UserEntity> users = userService.getAllUsers();
+		AuthResponse response;
 		for(UserEntity user : users) {
 			if(user.getEmail().equals(userCredentails.getEmail()) && user.getPassword().equals(userCredentails.getPassword())) {
-				return new ResponseEntity<String>("User logged in succesfully", HttpStatus.OK);
+				response = new AuthResponse("User logged in successfully", true, user);
+				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 		}
-		return new ResponseEntity<String>("Invalid credentials", HttpStatus.NOT_FOUND);
+		response = new AuthResponse("Invalid credentials", false, null);
+		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}
 	
 	@PostMapping("/signup")
-	public ResponseEntity<String> signup(@RequestBody UserEntity user){
-		UserEntity newUser = new UserEntity(user.getUserName(), user.getEmail(), user.getPassword());// created this for ID
-		HttpStatus status = userService.addUser(newUser);
+	public ResponseEntity<AuthResponse> signup(@RequestBody UserEntity user){
+		UserEntity newUser = new UserEntity(user.getUsername(), user.getEmail(), user.getPassword());// created this for ID
+		AuthResponse response;
+		HttpStatus status = userService.addUser(newUser);	
 		if(status==HttpStatus.OK) {
-			return new ResponseEntity<String>("Signup successsfull", status);
+			response = new AuthResponse("Signup successfull", true, newUser);
+			return new ResponseEntity<AuthResponse>(response, status);
 		}
-		return new ResponseEntity<String>("Something went wrong", status);
+		response = new AuthResponse("Something went wrong", false, null);
+		return new ResponseEntity<AuthResponse>(response, status);
 	}	
 }

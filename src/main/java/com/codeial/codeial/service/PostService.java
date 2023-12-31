@@ -11,5 +11,5 @@ import com.codeial.codeial.entity.PostEntity;
 public interface PostService {
 	List<PostEntity> getAllPosts();
 	
-	HttpStatus savePost(String content);
+	PostEntity savePost(String token, String content);
 }
