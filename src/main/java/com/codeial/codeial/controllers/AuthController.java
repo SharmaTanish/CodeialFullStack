@@ -8,9 +8,11 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codeial.codeial.entity.UserEntity;
+import com.codeial.codeial.jwtsecurity.JwtHelper;
 import com.codeial.codeial.service.UserService;
 import com.codeial.codeial.utilities.AuthResponse;
 
@@ -20,9 +22,13 @@ public class AuthController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private JwtHelper jwtHelper;
+	
 	@PostMapping("/login")
 	public ResponseEntity<AuthResponse> login(@RequestBody UserEntity userCredentails){
 		List<UserEntity> users = userService.getAllUsers();
+		// jwtHelper.validateToken(jwtToken, userCredentails); --> already done on JwtAuthenticationFilter in DTO?
 		AuthResponse response;
 		for(UserEntity user : users) {
 			if(user.getEmail().equals(userCredentails.getEmail()) && user.getPassword().equals(userCredentails.getPassword())) {

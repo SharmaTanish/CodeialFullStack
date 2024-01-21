@@ -1,9 +1,13 @@
 package com.codeial.codeial.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.codeial.codeial.entity.UserEntity;
@@ -34,14 +38,18 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public UserEntity loadUserByUsername(String username) {
+	public UserDetails loadUserByUsername(String username) {
 		List<UserEntity> users = userRepository.findAll();
-		for(UserEntity user : users) {
-			if(user.getUsername().equals(username)) {
-				return user;
+		UserEntity user = null;
+		for(UserEntity u : users) {
+			if(u.getUsername().equals(username)) {
+				user = u;
 			}
 		}
-		return null;
+        if (user == null) {
+            throw new UsernameNotFoundException("User Not found");
+        }
+        return new User(user.getEmail(), user.getPassword(), new ArrayList<>());
 	}
 	
 }

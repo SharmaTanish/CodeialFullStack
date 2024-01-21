@@ -13,7 +13,6 @@ import com.codeial.codeial.jwtsecurity.JwtAuthenticationEntryPoint;
 @Configuration
 public class SecurityConfig {
 
-
     @Autowired
     private JwtAuthenticationEntryPoint point;
     @Autowired
@@ -24,15 +23,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable())
-                .authorizeRequests().
-                requestMatchers("/test").authenticated().requestMatchers("/login").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+                .authorizeRequests()
+                	.requestMatchers("/login").permitAll()
+	                .requestMatchers("/signup").permitAll()
+	                .anyRequest().authenticated() //any other url apart from /logn, /signup needs authentication
+                .and()
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(point)) //configuring custom entry point "entry" for handling exception
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class); //adding custom "filter" before UsernamePasswordAuthenticationFilter filter in filter chain
+        return http.build(); //returns the fully configured HttpSecurity object/bean, and it is then interpreted by Spring as the definition of the SecurityFilterChain
     }
-
-
 }
