@@ -24,6 +24,8 @@ public class PostController {
 	
 	@GetMapping("/posts")
 	public ResponseEntity<List<PostEntity>> getPosts(){
+		// jwtHelper.validateToken(jwtToken, userCredentails); --> already done on JwtAuthenticationFilter in DTO?
+		
 		List<PostEntity> posts = postService.getAllPosts();
 		return new ResponseEntity<>(posts, HttpStatus.OK);
 	}
